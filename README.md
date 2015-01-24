@@ -1,7 +1,7 @@
 Bravery Base Template
 ===
 
-This theme is based on `_s` (from Automattic)[http://underscores.me] and the `_s_backbone` modifications (by tlovett1)[https://github.com/tlovett1/_s_backbone] to incorporate WordPress's Backbone.js infrastructure for dynamic content loading. To use the Backbone functionality, the site will require the (WP-API plugin)[http://wp-api.com] until it is finally incorporated into WordPress core.
+This theme is based on `_s` [from Automattic](http://underscores.me) and the `_s_backbone` modifications [by tlovett1](https://github.com/tlovett1/_s_backbone) to incorporate WordPress's Backbone.js infrastructure for dynamic content loading. To use the Backbone functionality, the site will require the [WP-API plugin](http://wp-api.com) until it is finally incorporated into WordPress core.
 
 This theme is meant as a base starting-point for future WordPress themes. Direct from the `Underscores` README:
 
