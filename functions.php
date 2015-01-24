@@ -107,11 +107,16 @@ add_action( 'widgets_init', 'brvry_widgets_init' );
  * Enqueue scripts and styles.
  */
 function brvry_scripts() {
+	$theme = wp_get_theme();
+	$theme_version = $theme->get( 'Version' );
 	wp_enqueue_script('modernizr', get_stylesheet_directory_uri() . '/js/vendor/modernizr.min.js', false, '2.8.3', false);
-	wp_enqueue_style( 'brvry-style', get_stylesheet_uri() );
+	wp_enqueue_style( 'brvry-style', get_stylesheet_uri(), false, $theme_version, 'all' );
+
+	wp_enqueue_script('jquery');
+	/* Iconic JS for SVG icons */
+	// wp_enqueue_script( 'iconic', get_stylesheet_directory_uri() . '/js/iconic.min.js', array(), '1.7.0', false );
 
 	wp_enqueue_script( 'brvry-navigation', get_template_directory_uri() . '/js/navigation.js', array(), '20120206', true );
-
 	wp_enqueue_script( 'brvry-skip-link-focus-fix', get_template_directory_uri() . '/js/skip-link-focus-fix.js', array(), '20130115', true );
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
