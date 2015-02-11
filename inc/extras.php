@@ -104,13 +104,21 @@ function brvry_admin_favicon() {
 }
 add_action('admin_head', 'brvry_admin_favicon');
 
-// custom admin login logo
-function brvry_login_logo() {
-	echo '<style type="text/css">
-	h1 a { background-image: url(' . get_stylesheet_directory_uri() . '/assets/img/brvry-login-dark.svg) !important; background-size: 100% !important; width: 215px !important;height: 155px !important; margin: 0 auto !important;}
-	</style>';
+// Custom Login Styles
+function brvry_login_stylesheet() {
+    wp_enqueue_style( 'brvry-login', get_template_directory_uri() . '/assets/css/brvry-login.css' );
 }
-add_action('login_head', 'brvry_login_logo');
+add_action( 'login_enqueue_scripts', 'brvry_login_stylesheet' );
+
+// Edit login page logo url
+function brvry_login_logo_url() {
+	return 'http://braverymedia.co';
+}
+add_filter('login_headerurl', 'brvry_login_logo_url');
+
+function brvry_login_logo_tooltip() {
+	return 'Site by Bravery Media';
+}
 
 // customize admin footer text
 function brvry_admin_footer() {
