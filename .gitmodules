@@ -1,6 +1,0 @@
-[submodule "bitters"]
-	path = bitters
-	url = https://github.com/thoughtbot/bitters.git
-[submodule "assets/scss/bitters"]
-	path = assets/scss/bitters
-	url = https://github.com/thoughtbot/bitters.git
