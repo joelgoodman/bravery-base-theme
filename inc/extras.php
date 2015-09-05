@@ -13,15 +13,72 @@
  * @param array $classes Classes for the body element.
  * @return array
  */
+
+function brvry_enqueue_jquery_in_footer( &$scripts ) {
+
+    if ( ! is_admin() )
+        $scripts->add_data( 'jquery', 'group', 1 );
+}
+add_action( 'wp_default_scripts', 'brvry_enqueue_jquery_in_footer' );
+
+//to add defer to loading of scripts - use defer to keep loading order
+function brvry_script_tag_defer($tag, $handle) {
+    if (is_admin()){
+        return $tag;
+    }
+    if (strpos($tag, '/wp-includes/js/jquery/jquery')) {
+        return $tag;
+    }
+    if (strpos($_SERVER['HTTP_USER_AGENT'], 'MSIE 9.') !==false) {
+    return $tag;
+    }
+    else {
+        return str_replace(' src',' defer src', $tag);
+    }
+}
+add_filter('script_loader_tag', 'brvry_script_tag_defer',10,2);
+
+
 function brvry_body_classes( $classes ) {
 	// Adds a class of group-blog to blogs with more than 1 published author.
 	if ( is_multi_author() ) {
 		$classes[] = 'group-blog';
 	}
+	global $post;
+	if ( isset( $post ) ) {
+		$classes[] = $post->post_type . '-' . $post->post_name;
+	}
+
+	// Site name body class
+	$site_name = get_bloginfo( 'name' );
+	//Lower case everything
+	$string = strtolower($site_name);
+	//Make alphanumeric (removes all other characters)
+	$string = preg_replace("/[^a-z0-9_\s-]/", "", $string);
+	//Clean up multiple dashes or whitespaces
+	$string = preg_replace("/[\s-]+/", " ", $string);
+	//Convert whitespaces and underscore to dash
+	$string = preg_replace("/[\s_]/", "-", $string);
+	$sitename = 'site-' . $string;
+
+	if ( isset($sitename) ) {
+		$classes[] = $sitename;
+	}
 
 	return $classes;
 }
 add_filter( 'body_class', 'brvry_body_classes' );
+
+function brvry_post_classes( $classes ) {
+	if ( is_single() || is_page() ) {
+		global $post;
+		$slug = $post->post_name;
+		$classes[] = 'post-' . $slug;
+	}
+
+	return $classes;
+}
+add_filter( 'post_class', 'brvry_post_classes' );
 
 if ( version_compare( $GLOBALS['wp_version'], '4.1', '<' ) ) :
 	/**
@@ -70,43 +127,9 @@ if ( version_compare( $GLOBALS['wp_version'], '4.1', '<' ) ) :
 	add_action( 'wp_head', 'brvry_render_title' );
 endif;
 
-// Automatically load favicons in the theme folder
-function brvry_favicon() {
-	echo '<link rel="Shortcut Icon" type="image/x-icon" href="' . get_stylesheet_directory_uri() . '/assets/img/favicons/favicon.ico" />';
-	echo '<link rel="apple-touch-icon" sizes="57x57" href="' . get_stylesheet_directory_uri() . '/assets/img/favicons/apple-touch-icon-57x57.png">';
-	echo '<link rel="apple-touch-icon" sizes="114x114" href="' . get_stylesheet_directory_uri() . '/assets/img/favicons/apple-touch-icon-114x114.png">';
-	echo '<link rel="apple-touch-icon" sizes="72x72" href="' . get_stylesheet_directory_uri() . '/assets/img/favicons/apple-touch-icon-72x72.png">';
-	echo '<link rel="apple-touch-icon" sizes="144x144" href="' . get_stylesheet_directory_uri() . '/assets/img/favicons/apple-touch-icon-144x144.png">';
-	echo '<link rel="apple-touch-icon" sizes="60x60" href="' . get_stylesheet_directory_uri() . '/assets/img/favicons/apple-touch-icon-60x60.png">';
-	echo '<link rel="apple-touch-icon" sizes="120x120" href="' . get_stylesheet_directory_uri() . '/assets/img/favicons/apple-touch-icon-120x120.png">';
-	echo '<link rel="apple-touch-icon" sizes="76x76" href="' . get_stylesheet_directory_uri() . '/assets/img/favicons/apple-touch-icon-76x76.png">';
-	echo '<link rel="apple-touch-icon" sizes="152x152" href="' . get_stylesheet_directory_uri() . '/assets/img/favicons/apple-touch-icon-152x152.png">';
-	echo '<link rel="apple-touch-icon" sizes="180x180" href="' . get_stylesheet_directory_uri() . '/assets/img/favicons/apple-touch-icon-180x180.png">';
-	echo '<link rel="icon" type="image/png" href="' . get_stylesheet_directory_uri() . '/assets/img/favicons/favicon-192x192.png" sizes="192x192">';
-	echo '<link rel="icon" type="image/png" href="' . get_stylesheet_directory_uri() . '/assets/img/favicons/favicon-160x160.png" sizes="160x160">';
-	echo '<link rel="icon" type="image/png" href="' . get_stylesheet_directory_uri() . '/assets/img/favicons/favicon-96x96.png" sizes="96x96">';
-	echo '<link rel="icon" type="image/png" href="' . get_stylesheet_directory_uri() . '/assets/img/favicons/favicon-16x16.png" sizes="16x16">';
-	echo '<link rel="icon" type="image/png" href="' . get_stylesheet_directory_uri() . '/assets/img/favicons/favicon-32x32.png" sizes="32x32">';
-	echo '<meta name="msapplication-TileColor" content="#2c2c2c">';
-	echo '<meta name="msapplication-TileImage" content="' . get_stylesheet_directory_uri() . '/assets/img/favicons/mstile-144x144.png">';
-}
-add_action('wp_head', 'brvry_favicon');
-
-
-// Adds your favicon to the admin.
-function brvry_admin_favicon() {
-	echo '<link rel="Shortcut Icon" type="image/x-icon" href="' . get_stylesheet_directory_uri() . '/assets/img/favicons/favicon.ico" />';
-	echo '<link rel="icon" type="image/png" href="' . get_stylesheet_directory_uri() . '/assets/img/favicons/favicon-192x192.png" sizes="192x192">';
-	echo '<link rel="icon" type="image/png" href="' . get_stylesheet_directory_uri() . '/assets/img/favicons/favicon-160x160.png" sizes="160x160">';
-	echo '<link rel="icon" type="image/png" href="' . get_stylesheet_directory_uri() . '/assets/img/favicons/favicon-96x96.png" sizes="96x96">';
-	echo '<link rel="icon" type="image/png" href="' . get_stylesheet_directory_uri() . '/assets/img/favicons/favicon-16x16.png" sizes="16x16">';
-	echo '<link rel="icon" type="image/png" href="' . get_stylesheet_directory_uri() . '/assets/img/favicons/favicon-32x32.png" sizes="32x32">';
-}
-add_action('admin_head', 'brvry_admin_favicon');
-
 // Custom Login Styles
 function brvry_login_stylesheet() {
-    wp_enqueue_style( 'brvry-login', get_template_directory_uri() . '/assets/css/brvry-login.css' );
+    wp_enqueue_style( 'brvry-login', get_template_directory_uri() . '/assets/css/bravery-login.css' );
 }
 add_action( 'login_enqueue_scripts', 'brvry_login_stylesheet' );
 
@@ -122,7 +145,7 @@ function brvry_login_logo_tooltip() {
 
 // customize admin footer text
 function brvry_admin_footer() {
-	echo '<a href="http://braverymedia.co/?ref=ctheme" title="Website by Bravery Transmedia" target="_blank">Website by Bravery Media</a>';
+	echo '<a href="http://braverymedia.co/?ref=ctheme" title="Website by Bravery" target="_blank">Website by Bravery.</a>';
 }
 add_filter('admin_footer_text', 'brvry_admin_footer');
 
@@ -134,3 +157,17 @@ function brvry_all_settings_link() {
 	add_theme_page(__('All Settings'), __('All Settings'), 'administrator', 'options.php');
 }
 add_action('admin_menu', 'brvry_all_settings_link');
+
+// Remove paragraphs from img or iframes
+function brvry_filter_ptags_on_images($content) {
+    $content = preg_replace('/<p>\s*(<a .*>)?\s*(<img .* \/>)\s*(<\/a>)?\s*<\/p>/iU', '\1\2\3', $content);
+    return preg_replace('/<p>\s*(<iframe .*>*.<\/iframe>)\s*<\/p>/iU', '\1', $content);
+}
+// add_filter('the_content', 'brvry_filter_ptags_on_images');
+
+// Allow SVG Uploads
+function brvry_mime_types($mimes) {
+  $mimes['svg'] = 'image/svg+xml';
+  return $mimes;
+}
+add_filter('upload_mimes', 'brvry_mime_types');
