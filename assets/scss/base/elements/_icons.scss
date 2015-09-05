@@ -1,0 +1,20 @@
+/* Hide all icons that are waiting to be injected */
+img.iconic {
+  display: none;
+}
+
+.iconic-property-fill, .iconic-property-text {
+    stroke: none !important;
+}
+
+.iconic-property-stroke {
+    fill: none !important;
+}
+
+.iconic * {
+    // Main color goes here
+}
+
+.iconic .iconic-property-accent {
+    // Accent color goes here
+}

@@ -10,3 +10,10 @@
 	margin-left: auto;
 	margin-right: auto;
 }
+
+/* Iconic theme rules. Don't delete! */
+
+@mixin iconic-color($color) {
+    fill: $color;
+    stroke: $color;
+}
