@@ -19,29 +19,18 @@ Normalizing styles have been helped along thanks to the fine work of
 Nicolas Gallagher and Jonathan Neal http://necolas.github.com/normalize.css/
 !*/
 
-@import "bourbon", "grid-settings", "neat";
-@import "config";
-@import "mixins/*";
-
 /*--------------------------------------------------------------
 1.0 Normalize
 --------------------------------------------------------------*/
 @import "base/normalize";
 
-/*--------------------------------------------------------------
-2.0 Typography
---------------------------------------------------------------*/
-@import "base/typography/typography";
+@import "bourbon", "config", "base/bitters/base", "neat";
+@import "mixins/*";
 
 /*--------------------------------------------------------------
 3.0 Elements
 --------------------------------------------------------------*/
 @import "base/elements/elements";
-
-/*--------------------------------------------------------------
-4.0 Forms
---------------------------------------------------------------*/
-@import "base/forms/forms";
 
 /*--------------------------------------------------------------
 5.0 Navigation
@@ -81,7 +70,7 @@ Nicolas Gallagher and Jonathan Neal http://necolas.github.com/normalize.css/
 /*--------------------------------------------------------------
 12.0 Media
 --------------------------------------------------------------*/
-@import "base/media";
+@import "base/media/media";
 
 /*--------------------------------------------------------------
 12.0 Media Queries
