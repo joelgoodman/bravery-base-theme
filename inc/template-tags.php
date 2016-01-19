@@ -264,3 +264,12 @@ function brvry_category_transient_flusher() {
 }
 add_action( 'edit_category', 'brvry_category_transient_flusher' );
 add_action( 'save_post',     'brvry_category_transient_flusher' );
+
+/**
+ * Helper for inlining images from theme directory.
+ * Must echo out when used: `echo brvry_image_path('bravery-logo.svg')`
+ */
+function brvry_image_path( $filename ) {
+	$img_path = get_stylesheet_directory_uri() . '/assets/img/' . $filename;
+	return $img_path;
+}

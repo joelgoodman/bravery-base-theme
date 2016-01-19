@@ -121,42 +121,45 @@ function brvry_scripts() {
 
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
-	} elseif ( is_home() || is_front_page() || is_archive() || is_search() ) {
-		global $wp_rewrite;
-
-		wp_enqueue_script( 'brvry_backbone-loop', get_template_directory_uri() . '/js/loop.js', array( 'jquery', 'backbone', 'underscore', 'wp-api'  ), '1.0', true );
-
-		$queried_object = get_queried_object();
-
-		$local = array(
-			'loopType' => 'home',
-			'queriedObject' => $queried_object,
-			'pathInfo' => array(
-				'author_permastruct' => $wp_rewrite->get_author_permastruct(),
-				'host' => preg_replace( '#^http(s)?://#i', '', untrailingslashit( get_option( 'home' ) ) ),
-				'path' => brvry_backbone_get_request_path(),
-				'use_trailing_slashes' => $wp_rewrite->use_trailing_slashes,
-				'parameters' => brvry_backbone_get_request_parameters(),
-			),
-		);
-
-		if ( is_category() || is_tag() || is_tax() ) {
-			$local['loopType'] = 'archive';
-			$local['taxonomy'] = get_taxonomy( $queried_object->taxonomy );
-		} elseif ( is_search() ) {
-			$local['loopType'] = 'search';
-			$local['searchQuery'] = get_search_query();
-		} elseif ( is_author() ) {
-			$local['loopType'] = 'author';
-		}
-
-		//set the page we're on so that Backbone can load the proper state
-		if ( is_paged() ) {
-			$local['page'] = absint( get_query_var( 'paged' ) ) + 1;
-		}
-
-		wp_localize_script( 'brvry_backbone-loop', 'settings', $local );
 	}
+	/* Uncomment if you want to use Backbone for Ajax loading */
+
+	// elseif ( is_home() || is_front_page() || is_archive() || is_search() ) {
+	// 	global $wp_rewrite;
+
+	// 	wp_enqueue_script( 'brvry_backbone-loop', get_template_directory_uri() . '/js/loop.js', array( 'jquery', 'backbone', 'underscore', 'wp-api'  ), '1.0', true );
+
+	// 	$queried_object = get_queried_object();
+
+	// 	$local = array(
+	// 		'loopType' => 'home',
+	// 		'queriedObject' => $queried_object,
+	// 		'pathInfo' => array(
+	// 			'author_permastruct' => $wp_rewrite->get_author_permastruct(),
+	// 			'host' => preg_replace( '#^http(s)?://#i', '', untrailingslashit( get_option( 'home' ) ) ),
+	// 			'path' => brvry_backbone_get_request_path(),
+	// 			'use_trailing_slashes' => $wp_rewrite->use_trailing_slashes,
+	// 			'parameters' => brvry_backbone_get_request_parameters(),
+	// 		),
+	// 	);
+
+	// 	if ( is_category() || is_tag() || is_tax() ) {
+	// 		$local['loopType'] = 'archive';
+	// 		$local['taxonomy'] = get_taxonomy( $queried_object->taxonomy );
+	// 	} elseif ( is_search() ) {
+	// 		$local['loopType'] = 'search';
+	// 		$local['searchQuery'] = get_search_query();
+	// 	} elseif ( is_author() ) {
+	// 		$local['loopType'] = 'author';
+	// 	}
+
+	// 	//set the page we're on so that Backbone can load the proper state
+	// 	if ( is_paged() ) {
+	// 		$local['page'] = absint( get_query_var( 'paged' ) ) + 1;
+	// 	}
+
+	// 	wp_localize_script( 'brvry_backbone-loop', 'settings', $local );
+	// }
 }
 add_action( 'wp_enqueue_scripts', 'brvry_scripts' );
 
